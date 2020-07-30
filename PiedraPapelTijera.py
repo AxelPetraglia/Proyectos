@@ -47,10 +47,10 @@ def eleccion(): #Este es el juego en sí
         elif (jugador == "papel"):
             if (computer == "piedra"):
                 print("\n||¡Punto para vos!||")
-                hp_pj = hp_pj - 1
+                hp_pc = hp_pc - 1
             else:
                 print("\n<<¡Punto para tu rival!>>")
-                hp_pc = hp_pc - 1
+                hp_pj = hp_pj - 1
         elif (jugador == "tijera"):
             if (computer == "piedra"):
                 print("\n<<¡Punto para tu rival!>>")
