@@ -58,12 +58,12 @@ def eleccion(): #Este es el juego en sí
             else:
                 print("\n||¡Punto para vos!||")
                 hp_pc = hp_pc - 1
-    if hp_pj == 0:                                      #Si el HP del jugador llega a 0, te dice que perdiste y te deja reiniciar la pelea
+    if hp_pj < hp_pc:                                      #Si el HP del jugador es mayor al HP de la pc, ganaste (si llega acá es porque uno de los dos es 0)
         print("\n<<<Perdiste, capo, mal ahí.>>>") 
         input("\nApretá cualquier tecla para probar de vuelta: ")
         print("----------------------------------\n")
         eleccion()
-    if hp_pc == 0:                                      #Si el HP de la computadora llega a 0, te dice que ganaste y te deja reiniciar la pelea
+    else:                       
         print("\n|||¡GANASTE!|||")
         input("\nApretá cualquier tecla para probar de vuelta: ")
         print("----------------------------------\n")
