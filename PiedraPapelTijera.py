@@ -22,7 +22,7 @@ def eleccion(): #Este es el juego en sí
 
         while (jugador != "piedra" and jugador != "papel" and jugador != "tijera"): #Si el jugador no elige las tres opciones validas...
             print(jugador)                                                          #intenta preguntarte de vuelta hasta que eligas una opción valida
-            jugador = input("Opción inválida. Elegí: Piedra, Papel o Tijera: ")
+            jugador = input("\nOpción inválida. Elegí: Piedra, Papel o Tijera: ")
             jugador = jugador.lower()
 
         computerInt = random.randint(0,2) # Hace que la computadora eliga un movimiento al azar. Como son tres movimientos posibles, 
@@ -35,6 +35,7 @@ def eleccion(): #Este es el juego en sí
         else:
             computer = "error"    
 
+        print("Tu rival eligió: " + computer + "\n")
         if jugador == computer: # Si el jugador y la computadora eligen la misma acción, se declara empate
             print("\n--¡Empate!--") 
         elif (jugador == "piedra"):                  # Si el jugador elige piedra,
