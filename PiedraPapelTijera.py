@@ -1,4 +1,8 @@
-#Versión 0.2, agregué creador de personajes y selección de rival
+#Versión 0.2:
+#agregué creador de personajes y selección de rival
+#Versión 0.3:
+#rebalanceo de HP y fuerza: el HP se multiplicó por 10, el daño está basado en la fuerza del personaje (todavía no pude hacer mi idea de randomizarlo)
+#creado un rival generado al azar, con salud entre 100 y 200, y fuerza entre 10 y 15
 
 import random
 import time
@@ -11,29 +15,34 @@ class jugador:
 #Rivales
 global PC  
 global PC2
-global PC3 
-PC = jugador(5, 10)
-PC2 = jugador(6, 10)
-PC3 = jugador(7, 10)
+global PC3
+global PC4 
+PC = jugador(60, 8)
+PC2 = jugador(100, 10)
+PC3 = jugador(150, 12)
+PC4 = jugador(random.randint(100, 200), random.randint(10,15))
 
 def creacion_pj():
-    puntos = 15
+    puntos = 20
     print("\nBienvenido a la creación de personaje\nTendrá " + str(puntos) + " puntos que podrá asignar a cada habilidad")
-    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés\nFuerza: Cuánto daño hacés al golpear\n")
+    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear\n")
 
-    HP_pj = input("¿Cuántos puntos quiere asignarle a su HP?: ")
+    HP_pj = int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) * 10
+    print("Tendrá " + str(HP_pj) + (" puntos de vida"))
+    print("Le quedan " + str(puntos - (HP_pj / 10)) + " puntos para asignar")
     fuerza_pj = input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")
+    print("Tendrá " + fuerza_pj + (" puntos de fuerza"))
     global PJ
     PJ = jugador(HP_pj, fuerza_pj) 
 
-    if int(HP_pj) + int(fuerza_pj) == puntos:
+    if int(int(HP_pj) / 10) + int(fuerza_pj) == puntos:
         print("\n¡Su personaje ha sido creado con éxito!")
         print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n")
         print("Ahora proseguirá a elegir su rival: ")
         time.sleep(2)
         eleccion()
 
-    elif int(HP_pj) + int(fuerza_pj) < puntos:
+    elif int(int(HP_pj) / 10) + int(fuerza_pj) < puntos:
         print("\nHa utilizado menos de los puntos asignados, ¿Está seguro que quiere continuar?")
         continuar = input("Presione Y para continuar o Presione N para volver a crear su personaje: ")
         continuar = continuar.lower()
@@ -51,14 +60,12 @@ def creacion_pj():
         creacion_pj()
         
 def eleccion():
-    print("\nPuedes pelear con los siguientes rivales:\nPC: Presiona 1\nPC2: Presiona 2\nPC3: Presiona 3")
+    print("\nPuedes pelear con los siguientes rivales:\nPC: Presiona 1\nPC2: Presiona 2\nPC3: Presiona 3\nRival Aleatorio: Presiona 4")
     global rival_elegido
     rival_elegido = input("\n¿Contra qué rival querés enfrentarte?: ")
     pelea()
-
     
 def pelea(): 
-
     if rival_elegido == "1":
         hp_pc = int(PC.HP)
         fuerzac = int(PC.fuerza)
@@ -68,6 +75,9 @@ def pelea():
     elif rival_elegido == "3":
         hp_pc = int(PC3.HP)
         fuerzac = int(PC3.fuerza)
+    elif rival_elegido == "4":
+        hp_pc = int(PC4.HP)
+        fuerzac = int(PC4.fuerza)
 
     hp_pj = int(PJ.HP) 
     fuerzaj = int(PJ.fuerza)
@@ -93,31 +103,31 @@ def pelea():
             computer = "tijera"
         else:
             computer = "error"    
-
+    
         print("Tu rival eligió: " + computer + "\n")
-        if jugador == computer: # Si el jugador y la computadora eligen la misma acción, se declara empate
+        if jugador == computer: 
             print("\n--¡Empate!--") 
-        elif (jugador == "piedra"):                  # Si el jugador elige piedra,
-            if (computer == "papel"):                # y la computadora elige papel,
-                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*(fuerzac/10)) + " puntos de vida!") # declara que gana la computadora
-                hp_pj = hp_pj - (1*(fuerzac/10))                    # y le resta HP dependiendo de la fuerza
+        elif (jugador == "piedra"):                  
+            if (computer == "papel"):                
+                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!") 
+                hp_pj = hp_pj - (1*fuerzac)                    
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*(fuerzaj/10)) + " puntos de vida!")
-                hp_pc = hp_pc - (1*(fuerzaj/10))
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
+                hp_pc = hp_pc - (1*fuerzaj)
         elif (jugador == "papel"):
             if (computer == "piedra"):
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*(fuerzaj/10)) + " puntos de vida!")
-                hp_pc = hp_pc - (1*(fuerzaj/10))
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
+                hp_pc = hp_pc - (1*fuerzaj)
             else:
-                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*(fuerzac/10)) + " puntos de vida!")
-                hp_pj = hp_pj - (1*(fuerzac/10))
+                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!")
+                hp_pj = hp_pj - (1*fuerzac)
         elif (jugador == "tijera"):
             if (computer == "piedra"):
-                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*(fuerzac/10)) + " puntos de vida!")
-                hp_pj = hp_pj - (1*(fuerzac/10))
+                print("\n<<¡Punto para tu rival!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!")
+                hp_pj = hp_pj - (1*fuerzac)
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*(fuerzaj/10)) + " puntos de vida!")
-                hp_pc = hp_pc - (1*(fuerzaj/10))
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
+                hp_pc = hp_pc - (1*fuerzaj)
     
     if hp_pj < hp_pc:                                      #Si el HP del jugador es mayor al HP de la pc, ganaste (si llega acá es porque uno de los dos es 0)
         print("\n<<<Perdiste, capo, mal ahí.>>>") 
