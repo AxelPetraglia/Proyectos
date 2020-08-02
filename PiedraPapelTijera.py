@@ -143,8 +143,12 @@ def pelea():
     
         max_dañopc = defensaj * 0.5
         rango_dañopc = random.randint(0, int(max_dañopc))
+        if rango_dañopc < 0:
+            rango_dañopc = 0
         max_dañopj = defensac * 0,5
         rango_dañopj = random.randint(0, int(max_dañopc))
+        if rango_dañopj < 0:
+            rango_dañopj = 0
 
         print("\n" + nombre_pc + " eligió: " + computer + "\n")
         if jugador == computer: 
