@@ -9,52 +9,62 @@
 #Agregada opción para ponerte nombre
 #Los rivales IA ahora tienen nombres (posiblemente temporales) y son mencionados durante la pelea
 
+#Versión 0.4
+#Añadido el stat de defensa
+#El daño realizado es calculado entre la fuerza del atacante y la defensa del defensor: 
+#El máximo de daño es igual a la fuerza del atacante, reducido por la defensa del defensor dividida a la mitad
+
 import random
 import time
 
 class jugador: 
-    def __init__(self, nombre, HP, fuerza):
+    def __init__(self, nombre, HP, fuerza, defensa):
         self.HP = HP
         self.nombre = nombre
         self.fuerza = fuerza
+        self.defensa = defensa
 
 #Rivales
 global PC  
 global PC2
 global PC3
 global PC4 
-PC = jugador("Daniel Placeholder", 60, 8)
-PC2 = jugador("Juan Normal", 100, 10)
-PC3 = jugador("Carlos Testeo", 150, 12)
-PC4 = jugador("Ibrahim al-Azar", random.randint(100, 200), random.randint(10,15))
+PC = jugador("Daniel Placeholder", 60, 8, 5)
+PC2 = jugador("Juan Normal", 100, 10, 8)
+PC3 = jugador("Carlos Testeo", 150, 12, 10)
+PC4 = jugador("Ibrahim al-Azar", random.randint(100, 200), random.randint(10,15), random.randint(5, 12))
 
 def creacion_pj():
     puntos = 20
     print("\nBienvenido a la creación de personaje")
     nombre = input("¿Cuál nombre querés darle a tu personaje?: ")
     print("\nTendrá " + str(puntos) + " puntos que podrá asignar a cada habilidad")
-    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear\n")
+    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear\nDefensa: Cuánto daño podes resistir\n")
     time.sleep(1)    
 
     HP_pj = int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) * 10
     print("Tendrá " + str(HP_pj) + (" puntos de HP"))
     time.sleep(0.6)
     print("\nLe quedan " + str(puntos - (HP_pj / 10)) + " puntos para asignar\n")
-    fuerza_pj = input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")
-    print("Tendrá " + fuerza_pj + (" puntos de fuerza"))
+    fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: "))
+    print("Tendrá " + str(fuerza_pj) + " puntos de fuerza")
+    print("\nLe quedan " + str(puntos - (int(HP_pj / 10) + fuerza_pj)) + " puntos para asignar\n")
+    defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: "))
+    print("Tendrá " + str(defensa_pj) + (" puntos de defensa"))
     time.sleep(1)
+    
     global PJ
-    PJ = jugador(nombre, HP_pj, fuerza_pj) 
+    PJ = jugador(nombre, HP_pj, fuerza_pj, defensa_pj) 
 
-    if int(int(HP_pj) / 10) + int(fuerza_pj) == puntos:
+    if int(int(HP_pj) / 10) + int(fuerza_pj) + int(defensa_pj) == puntos:
         time.sleep(1)
         print("\n¡Su personaje " + nombre + " ha sido creado con éxito!")
-        print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n")
+        print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n" + str(defensa_pj) + " Puntos de Defensa")
         print("----------------------------------\nAhora proseguirá a elegir su rival: ")
         time.sleep(2)
         eleccion()
 
-    elif int(int(HP_pj) / 10) + int(fuerza_pj) < puntos:
+    elif int(int(HP_pj) / 10) + int(fuerza_pj) + int(defensa_pj) < puntos:
         time.sleep(1)
         print("\nHa utilizado menos de los puntos asignados, ¿Está seguro que quiere continuar?")
         continuar = input("Presione Y para continuar o Presione N para volver a crear su personaje: ")
@@ -83,22 +93,27 @@ def pelea():
     if rival_elegido == "1":
         hp_pc = int(PC.HP)
         fuerzac = int(PC.fuerza)
-        nombre_pc = PC1.nombre
+        defensac = int(PC.defensa)
+        nombre_pc = PC.nombre
     elif rival_elegido == "2":
         hp_pc = int(PC2.HP)
         fuerzac = int(PC2.fuerza)
+        defensac = int(PC2.defensa)
         nombre_pc = PC2.nombre
     elif rival_elegido == "3":
         hp_pc = int(PC3.HP)
         fuerzac = int(PC3.fuerza)
+        defensac = int(PC3.defensa)
         nombre_pc = PC3.nombre
     elif rival_elegido == "4":
         hp_pc = int(PC4.HP)
         fuerzac = int(PC4.fuerza)
+        defensac = int(PC4.defensa)
         nombre_pc = PC4.nombre
 
     hp_pj = int(PJ.HP) 
     fuerzaj = int(PJ.fuerza)
+    defensaj = int(PJ.defensa)
 
     while hp_pc > 0 and hp_pj > 0: # Mientras ambos peleadores tengan al menos 1 punto de HP, la pelea sigue
         if hp_pc == 0 or hp_pj == 0: # Si el HP de alguno de los dos llega a 0, se continua a la siguiente parte del código (ver si el jugador o la máquina pierde)
@@ -122,30 +137,35 @@ def pelea():
         else:
             computer = "error"    
     
+        max_dañopc = defensaj * 0.5
+        rango_dañopc = random.randint(0, int(max_dañopc))
+        max_dañopj = defensac * 0,5
+        rango_dañopj = random.randint(0, int(max_dañopc))
+
         print("\n" + nombre_pc + " eligió: " + computer + "\n")
         if jugador == computer: 
             print("\n--¡Empate!--") 
         elif (jugador == "piedra"):                  
             if (computer == "papel"):                
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!") 
-                hp_pj = hp_pj - (1*fuerzac)                    
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
+                hp_pj = hp_pj - (fuerzac - rango_dañopj)                    
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
-                hp_pc = hp_pc - (1*fuerzaj)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj) + " puntos de vida!")
+                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
         elif (jugador == "papel"):
             if (computer == "piedra"):
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
-                hp_pc = hp_pc - (1*fuerzaj)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj)  + " puntos de vida!")
+                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
             else:
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!") 
-                hp_pj = hp_pj - (1*fuerzac)
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
+                hp_pj = hp_pj - (fuerzac - rango_dañopj)
         elif (jugador == "tijera"):
             if (computer == "piedra"):
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(1*fuerzac) + " puntos de vida!") 
-                hp_pj = hp_pj - (1*fuerzac)
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
+                hp_pj = hp_pj - (fuerzac - rango_dañopj)
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(1*fuerzaj) + " puntos de vida!")
-                hp_pc = hp_pc - (1*fuerzaj)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj)  + " puntos de vida!")
+                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
     
     if hp_pj < hp_pc:                                      #Si el HP del jugador es mayor al HP de la pc, ganaste (si llega acá es porque uno de los dos es 0)
         print("\n<<<Perdiste, capo, mal ahí.>>>") 
@@ -168,4 +188,3 @@ def pelea():
         eleccion()
 
 creacion_pj()
-
