@@ -12,7 +12,11 @@
 #Versión 0.4
 #Añadido el stat de defensa
 #El daño realizado es calculado entre la fuerza del atacante y la defensa del defensor: 
-#El máximo de daño es igual a la fuerza del atacante, reducido por la defensa del defensor dividida a la mitad
+#A la fuerza del atacante se le resta un número elegido entre 0 y la mitad de los puntos de defensa del que recibe el golpe
+
+#Ejemplo: el atacante tiene 15 de fuerza y el defensor tiene 10 de defensa. 
+#El randomizador elige un número entre 0 y la mitad de los puntos de defensa (5 en este caso)
+#El daño causado en esta circunstancia puede variar entre 10 y 15
 
 import random
 import time
