@@ -21,6 +21,7 @@
 #Versión 0.4b
 #Cambiado la fórmula para calcular daño, ahora es Daño = 2*Fuerza - randint(defensa/2, defensa*2)
 #En la creación de personaje hay un mínimo de 1 para todos los stats (10 para HP)
+#Ya no se pueden elegir valores negativos en la creación de persnaje
 
 import random
 import time
@@ -51,14 +52,22 @@ def creacion_pj():
     time.sleep(1)    
 
     HP_pj = (int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) + 1) * 10
+    if HP_pj < 0:
+        HP_pj = (int(input("Valor inválido, intente de nuevo: ")) + 1) * 10
     print("Tendrá " + str(HP_pj) + (" puntos de HP"))
     time.sleep(0.6)
+
     print("\nLe quedan " + str(int(puntos - ((HP_pj - 1 ) / 10))) + " puntos para asignar\n")
     fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")) + 1
+    if fuerza_pj < 0:
+        fuerza_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
     print("Tendrá " + str(fuerza_pj) + " puntos de fuerza")
     time.sleep(0.6)
+
     print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1 ) / 10) + (fuerza_pj - 1)))) + " puntos para asignar\n")
     defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: ")) + 1
+    if defensa_pj < 0:
+        defensa_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
     print("Tendrá " + str(defensa_pj) + (" puntos de defensa"))
     time.sleep(0.6)
     
