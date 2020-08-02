@@ -18,6 +18,9 @@
 #El randomizador elige un número entre 0 y la mitad de los puntos de defensa (5 en este caso)
 #El daño causado en esta circunstancia puede variar entre 10 y 15
 
+#Versión 0.4b
+#Cambiado la fórmula para calcular daño, ahora es Daño = 2*Fuerza - randint(defensa/2, defensa*2) 
+
 import random
 import time
 
@@ -141,36 +144,40 @@ def pelea():
         else:
             computer = "error"    
     
-        max_dañopc = defensaj * 0.5
-        rango_dañopc = max(random.randint(0, int(max_dañopc)), 0)
+        min_dañopc = int(defensaj / 2)
+        max_dañopc = defensaj * 2
+        rango_dañopc = max(random.randint(min_dañopc, max_dañopc), 0)
+        if max_dañopc < 0:
+            max_dañopc = 0
 
-        max_dañopj = defensac * 0,5
-        rango_dañopj = max(random.randint(0, int(max_dañopc)), 0)
+        min_dañopj = int(defensac / 2)
+        max_dañopj = defensac * 2
+        rango_dañopj = max(random.randint(min_dañopj, max_dañopj), 0)
 
         print("\n" + nombre_pc + " eligió: " + computer + "\n")
         if jugador == computer: 
             print("\n--¡Empate!--") 
         elif (jugador == "piedra"):                  
             if (computer == "papel"):                
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
-                hp_pj = hp_pj - (fuerzac - rango_dañopj)                    
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
+                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj)                    
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj) + " puntos de vida!")
-                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc) + " puntos de vida!")
+                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
         elif (jugador == "papel"):
             if (computer == "piedra"):
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj)  + " puntos de vida!")
-                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc)  + " puntos de vida!")
+                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
             else:
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
-                hp_pj = hp_pj - (fuerzac - rango_dañopj)
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
+                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj) 
         elif (jugador == "tijera"):
             if (computer == "piedra"):
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(fuerzac - rango_dañopc) + " puntos de vida!") 
-                hp_pj = hp_pj - (fuerzac - rango_dañopj)
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
+                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj) 
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(fuerzaj - rango_dañopj)  + " puntos de vida!")
-                hp_pc = hp_pc - (fuerzaj - rango_dañopc)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc)  + " puntos de vida!")
+                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
     
     if hp_pj < hp_pc:                                      #Si el HP del jugador es mayor al HP de la pc, ganaste (si llega acá es porque uno de los dos es 0)
         print("\n<<<Perdiste, capo, mal ahí.>>>") 
@@ -193,3 +200,4 @@ def pelea():
         eleccion()
 
 creacion_pj()
+
