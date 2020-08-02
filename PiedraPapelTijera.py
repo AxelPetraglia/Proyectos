@@ -61,7 +61,7 @@ def creacion_pj():
     print("Tendrá " + str(HP_pj) + (" puntos de HP"))
 
     time.sleep(0.6)
-    print("\nLe quedan " + str(int(puntos - ((HP_pj - 1 ) / 10))) + " puntos para asignar\n")
+    print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1) / 10)))) + " puntos para asignar\n")
 
     try:
         fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")) + 1
@@ -72,7 +72,7 @@ def creacion_pj():
     print("Tendrá " + str(fuerza_pj) + " puntos de fuerza")
 
     time.sleep(0.6)
-    print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1 ) / 10) + (fuerza_pj - 1)))) + " puntos para asignar\n")
+    print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1) / 10) + (fuerza_pj - 1)))) + " puntos para asignar\n")
     try:
         defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: ")) + 1
     except:
