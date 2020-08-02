@@ -19,7 +19,8 @@
 #El daño causado en esta circunstancia puede variar entre 10 y 15
 
 #Versión 0.4b
-#Cambiado la fórmula para calcular daño, ahora es Daño = 2*Fuerza - randint(defensa/2, defensa*2) 
+#Cambiado la fórmula para calcular daño, ahora es Daño = 2*Fuerza - randint(defensa/2, defensa*2)
+#En la creación de personaje hay un mínimo de 1 para todos los stats (10 para HP)
 
 import random
 import time
@@ -49,21 +50,22 @@ def creacion_pj():
     print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear\nDefensa: Cuánto daño podes resistir\n")
     time.sleep(1)    
 
-    HP_pj = int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) * 10
+    HP_pj = (int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) + 1) * 10
     print("Tendrá " + str(HP_pj) + (" puntos de HP"))
     time.sleep(0.6)
-    print("\nLe quedan " + str(puntos - (HP_pj / 10)) + " puntos para asignar\n")
-    fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: "))
+    print("\nLe quedan " + str(int(puntos - ((HP_pj - 1 ) / 10))) + " puntos para asignar\n")
+    fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")) + 1
     print("Tendrá " + str(fuerza_pj) + " puntos de fuerza")
-    print("\nLe quedan " + str(puntos - (int(HP_pj / 10) + fuerza_pj)) + " puntos para asignar\n")
-    defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: "))
+    time.sleep(0.6)
+    print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1 ) / 10) + (fuerza_pj - 1)))) + " puntos para asignar\n")
+    defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: ")) + 1
     print("Tendrá " + str(defensa_pj) + (" puntos de defensa"))
-    time.sleep(1)
+    time.sleep(0.6)
     
     global PJ
     PJ = jugador(nombre, HP_pj, fuerza_pj, defensa_pj) 
 
-    if int(int(HP_pj) / 10) + int(fuerza_pj) + int(defensa_pj) == puntos:
+    if int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) == puntos:
         time.sleep(1)
         print("\n¡Su personaje " + nombre + " ha sido creado con éxito!")
         print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n" + str(defensa_pj) + " Puntos de Defensa")
@@ -71,7 +73,7 @@ def creacion_pj():
         time.sleep(2)
         eleccion()
 
-    elif int(int(HP_pj) / 10) + int(fuerza_pj) + int(defensa_pj) < puntos:
+    elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < puntos:
         time.sleep(1)
         print("\nHa utilizado menos de los puntos asignados, ¿Está seguro que quiere continuar?")
         continuar = input("Presione Y para continuar o Presione N para volver a crear su personaje: ")
@@ -200,4 +202,3 @@ def pelea():
         eleccion()
 
 creacion_pj()
-
