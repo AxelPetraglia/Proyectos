@@ -27,6 +27,11 @@
 #Versión 0.4c
 #Arreglado error cuando elegís algo que no sea y o n cuando te sobran puntos al crear personaje (Gracias Tony por ser tan raro)
 
+#Versión 0.5
+#Agregada función de guardado y cargado de personaje. 
+#Para guardar el personaje, el programa crea un .txt con el nombre y stats del personaje. 
+#Para cargar un personaje, el programa lee el .txt y aplica la info de adentro a los stats dentro del juego
+
 import random
 import time
 
@@ -46,6 +51,20 @@ PC = jugador("Daniel Placeholder", 60, 8, 5)
 PC2 = jugador("Juan Normal", 100, 10, 8)
 PC3 = jugador("Carlos Testeo", 150, 12, 10)
 PC4 = jugador("Ibrahim al-Azar", random.randint(100, 200), random.randint(10,15), random.randint(5, 12))
+
+def main_menu():
+    print("Bienvenido a\n")
+    time.sleep(0.2)
+    print("   ____________\n  / __/ __/ __/\n _\ \/ _// _/  \n/___/_/ /_/    \n")
+    time.sleep(0.5)
+    print("Creado por Axel Petraglia\nIdea original: Alfredo Suescun\nVersión: Alpha 0.5\n")
+    opcion_menu = input("Presione 1 para crear una nueva partida\nPresione 2 para cargar una partida previa\n\n")
+    if int(opcion_menu) == 1:
+        creacion_pj()
+    elif int(opcion_menu) == 2:
+        load_file()
+    while int(opcion_menu) != 1 and int(opcion_menu) != 2:
+        opcion_menu = input("Error de selección.\nPresione 1 para crear una nueva partida\nPresione 2 para cargar una partida previa\n\n")
 
 def creacion_pj():
     puntos = 20
@@ -107,9 +126,15 @@ def creacion_pj():
         time.sleep(0.5)
         print("\n¡Su personaje " + nombre + " ha sido creado con éxito!")
         print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n" + str(defensa_pj) + " Puntos de Defensa")
-        print("----------------------------------\nAhora proseguirá a elegir su rival: ")
+        save_eleccion = input("----------------------------------\n¿Quiere guardar su personaje?:\nPresione Y para guardar\nPresione N para ir directo a elegir su rival\n\n")
+        save_eleccion = save_eleccion.lower()
+        if save_eleccion == "y":
+            save_file()
+        elif save_eleccion == "n":
+            eleccion()
+        while save_eleccion != "y" and save_eleccion != "n":
+            save_eleccion = input("Error de selección.\nPresione Y para guardar\nPresione N para ir directo a elegir su rival\n\n")    
         time.sleep(0.5)
-        eleccion()
 
     elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < puntos:
         time.sleep(0.5)
@@ -121,7 +146,15 @@ def creacion_pj():
             continuar = input("\nOpción inválida.\nPresione Y para continuar de todos modos o presione N para volver a crear su personaje: ")
             continuar = continuar.lower()
         if continuar == "y":
-            eleccion()
+            save_eleccion = input("----------------------------------\n¿Quiere guardar su personaje?:\nPresione Y para guardar\nPresione N para ir directo a elegir su rival\n\n")
+            save_eleccion = save_eleccion.lower()
+            if save_eleccion == "y":
+                save_file()
+            elif save_eleccion == "n":
+                eleccion()
+            while save_eleccion != "y" and save_eleccion != "n":
+                save_eleccion = input("Error de selección.\nPresione Y para guardar\nPresione N para ir directo a elegir su rival\n\n")    
+            time.sleep(0.5)
         elif continuar == "n":
             creacion_pj()
 
@@ -135,7 +168,44 @@ def creacion_pj():
         print("\nHa utilizado más puntos que los que tiene asignados. Intente de nuevo")
         time.sleep(1)
         creacion_pj()
-        
+
+def save_file():
+    save = open("SaveSFF.txt", "w+")
+    save.writelines(str(PJ.nombre) + "\n" + str(PJ.HP) + "\n" + str(PJ.fuerza) + "\n" + str(PJ.defensa))
+    time.sleep(0.5)
+    save.close()
+    print("Su partida ha sido guardada con éxito")
+    eleccion()
+
+def load_file():
+    count = 0
+    load = open("SaveSFF.txt", "r")
+
+    load_nombre = load.readline()
+    nombre_cargado = load_nombre.strip()
+    
+    load_HP = load.readline() 
+    HP_cargado = load_HP.strip()    
+
+    load_fuerza = load.readline()
+    fuerza_cargado = load_fuerza.strip()
+
+    load_defensa = load.readline()
+    defensa_cargado = load_defensa.strip()
+    
+    for line in load:
+        count += 1
+
+    global PJ
+    PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado)
+
+    print("\nTu personaje " + PJ.nombre + " tiene: \n" + str(PJ.HP) + " Puntos de HP\n" + str(PJ.fuerza) + " Puntos de Fuerza\n" + str(PJ.defensa) + " Puntos de Defensa")
+    time.sleep(0.5)
+    load.close()
+    print("\nBienvenido de vuelta")
+    time.sleep(0.2)
+    eleccion()  
+
 def eleccion():
     print("\nPuedes pelear con los siguientes rivales:\nDaniel Placeholder: Presiona 1\nJuan Normal: Presiona 2\nCarlos Testeo: Presiona 3\nIbrahim al-Azar: Presiona 4")
     global rival_elegido
@@ -245,4 +315,4 @@ def pelea():
         print("----------------------------------\n")
         eleccion()
 
-creacion_pj()
+main_menu()
