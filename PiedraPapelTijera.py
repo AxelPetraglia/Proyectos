@@ -178,7 +178,6 @@ def save_file():
     eleccion()
 
 def load_file():
-    count = 0
     load = open("SaveSFF.txt", "r")
 
     load_nombre = load.readline()
@@ -192,9 +191,6 @@ def load_file():
 
     load_defensa = load.readline()
     defensa_cargado = load_defensa.strip()
-    
-    for line in load:
-        count += 1
 
     global PJ
     PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado)
