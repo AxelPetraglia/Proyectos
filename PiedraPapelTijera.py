@@ -58,7 +58,12 @@ def creacion_pj():
     try:
         HP_pj = (int(input("¿Cuántos puntos quiere asignarle a su HP?: ")) + 1) * 10
     except:
-        HP_pj = (int(input("Por favor usá números, intente de nuevo: ")) + 1) * 10
+        try:
+            HP_pj = (int(input("Por favor usá números, intente de nuevo: ")) + 1) * 10
+        except: 
+            print("¡Solamente podés usar números! Va a volver al creador de personaje")
+            time.sleep(0.6)
+            creacion_pj()
     while HP_pj < 0:
         HP_pj = (int(input("Valor inválido, intente de nuevo: ")) + 1) * 10   
     print("Tendrá " + str(HP_pj) + (" puntos de HP"))
@@ -69,7 +74,12 @@ def creacion_pj():
     try:
         fuerza_pj = int(input("¿Cuántos puntos quiere asignarle a su Fuerza?: ")) + 1
     except:
-        fuerza_pj = int(input("Por favor use números, intente de nuevo: ") + 1)
+        try:
+            fuerza_pj = int(input("Por favor use números, intente de nuevo: ") + 1)
+        except: 
+            print("¡Solamente podés usar números! Va a volver al creador de personaje")
+            time.sleep(0.6)
+            creacion_pj()            
     while fuerza_pj < 0:
         fuerza_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
     print("Tendrá " + str(fuerza_pj) + " puntos de fuerza")
@@ -79,7 +89,12 @@ def creacion_pj():
     try:
         defensa_pj = int(input("¿Cuántos puntos quiere asignarle a su Defensa?: ")) + 1
     except:
-        defensa_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
+        try:
+            defensa_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
+        except: 
+            print("¡Solamente podés usar números! Va a volver al creador de personaje")
+            time.sleep(0.6)
+            creacion_pj()              
     while defensa_pj < 0:
         defensa_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
     print("Tendrá " + str(defensa_pj) + (" puntos de defensa"))
