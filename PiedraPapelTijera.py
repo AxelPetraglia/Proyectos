@@ -104,7 +104,7 @@ def creacion_pj():
             creacion_pj()
         while (continuar != "y" and continuar != "n"):
             print(continuar)
-            continuar = input("\nOpción inválidda.\nPresione Y para continuar de todos modos o presione N para volver a crear su personaje: ")
+            continuar = input("\nOpción inválida.\nPresione Y para continuar de todos modos o presione N para volver a crear su personaje: ")
             continuar = continuar.lower()
 
     elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < 0:
