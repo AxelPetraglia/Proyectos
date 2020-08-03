@@ -24,6 +24,9 @@
 #Ya no se pueden elegir valores negativos en la creación de persnaje
 #Solucionados algunos errores en la creación de personaje
 
+#Versión 0.4c
+#Arreglado error cuando elegís algo que no sea y o n cuando te sobran puntos al crear personaje (Gracias Tony por ser tan raro)
+
 import random
 import time
 
@@ -98,14 +101,14 @@ def creacion_pj():
         print("\nHa utilizado menos de los puntos asignados, ¿Está seguro que quiere continuar?")
         continuar = input("Presione Y para continuar o Presione N para volver a crear su personaje: ")
         continuar = continuar.lower()
-        if continuar == "y":
-            eleccion()
-        elif continuar == "n":
-            creacion_pj()
         while (continuar != "y" and continuar != "n"):
             print(continuar)
             continuar = input("\nOpción inválida.\nPresione Y para continuar de todos modos o presione N para volver a crear su personaje: ")
             continuar = continuar.lower()
+        if continuar == "y":
+            eleccion()
+        elif continuar == "n":
+            creacion_pj()
 
     elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < 0:
         print("\nHa utilizado más puntos que los que tiene asignados. Intente de nuevo")
@@ -150,8 +153,8 @@ def pelea():
     fuerzaj = int(PJ.fuerza)
     defensaj = int(PJ.defensa)
 
-    while hp_pc > 0 and hp_pj > 0: # Mientras ambos peleadores tengan al menos 1 punto de HP, la pelea sigue
-        if hp_pc == 0 or hp_pj == 0: # Si el HP de alguno de los dos llega a 0, se continua a la siguiente parte del código (ver si el jugador o la máquina pierde)
+    while hp_pc > 0 and hp_pj > 0: 
+        if hp_pc == 0 or hp_pj == 0: 
             continue
         print("----------------------------------\n\nTenés " + str(hp_pj) + " puntos de vida.\n" + nombre_pc + " tiene: " + str(hp_pc) + " puntos de vida.\n") # Printea cuánto HP tenes vos y el rival
         jugador = input("----------------------------------\nElegí: Piedra, Papel o Tijera: ") 
