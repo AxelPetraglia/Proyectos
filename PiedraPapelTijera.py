@@ -35,7 +35,7 @@
 #Versión 0.6
 #Agregados los golpes críticos
 #Este golpe ignora la defensa del rival y multiplica por 2 la fuerza de quien da el golpe crítico
-#Ahora para elegir piedra, papel o tijera solamente tenes que poner 1, 2 o tres (respectivamente)
+#Ahora para elegir piedra, papel o tijera solamente tenes que poner 1, 2 o 3 (respectivamente)
 
 import random
 import time
