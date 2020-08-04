@@ -32,6 +32,11 @@
 #Para guardar el personaje, el programa crea un .txt con el nombre y stats del personaje. 
 #Para cargar un personaje, el programa lee el .txt y aplica la info de adentro a los stats dentro del juego
 
+#Versión 0.6
+#Agregados los golpes críticos
+#Este golpe ignora la defensa del rival y multiplica por 2 la fuerza de quien da el golpe crítico
+#Ahora para elegir piedra, papel o tijera solamente tenes que poner 1, 2 o tres (respectivamente)
+
 import random
 import time
 
@@ -195,11 +200,11 @@ def load_file():
     global PJ
     PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado)
 
+    print("\nCargado con éxito:")
     print("\nTu personaje " + PJ.nombre + " tiene: \n" + str(PJ.HP) + " Puntos de HP\n" + str(PJ.fuerza) + " Puntos de Fuerza\n" + str(PJ.defensa) + " Puntos de Defensa")
+    print("----------------------------------")
     time.sleep(0.5)
     load.close()
-    print("\nBienvenido de vuelta")
-    time.sleep(0.2)
     eleccion()  
 
 def eleccion():
@@ -238,13 +243,17 @@ def pelea():
         if hp_pc == 0 or hp_pj == 0: 
             continue
         print("----------------------------------\n\nTenés " + str(hp_pj) + " puntos de vida.\n" + nombre_pc + " tiene: " + str(hp_pc) + " puntos de vida.\n") # Printea cuánto HP tenes vos y el rival
-        jugador = input("----------------------------------\nElegí: Piedra, Papel o Tijera: ") 
-        jugador = jugador.lower() # Te hace elegir una acción y la transfiere a lowercase (para que no sean afectadas por usar mayusculas)
+        jugador = input("----------------------------------\nPiedra = 1, Papel = 2 o Tijera = 3: ") 
+        while (jugador != "1" and jugador != "2" and jugador != "3"): 
+            print(jugador)                                                          
+            jugador = input("\nOpción inválida. Piedra = 1, Papel = 2 o Tijera = 3: ")
 
-        while (jugador != "piedra" and jugador != "papel" and jugador != "tijera"): #Si el jugador no elige las tres opciones validas...
-            print(jugador)                                                          #intenta preguntarte de vuelta hasta que eligas una opción valida
-            jugador = input("\nOpción inválida. Elegí: Piedra, Papel o Tijera: ")
-            jugador = jugador.lower()
+        if jugador == "1":
+            jugador = "piedra"
+        elif jugador == "2":
+            jugador = "papel"
+        elif jugador == "3":
+            jugador = "tijera"
 
         computerInt = random.randint(0,2) # Hace que la computadora eliga un movimiento al azar. Como son tres movimientos posibles, 
         if (computerInt == 0):            # elige entre 3 numeros y despues el numero se traduce a un movimiento (expresado en texto)
@@ -265,32 +274,65 @@ def pelea():
         min_dañopj = int(defensac / 2)
         max_dañopj = defensac * 2
         rango_dañopj = max(random.randint(min_dañopj, max_dañopj), 0)
+        if max_dañopj < 0:
+            max_dañopj = 0
 
-        print("\n" + nombre_pc + " eligió: " + computer + "\n")
+        daño_pj = int(2*fuerzaj) - rango_dañopc
+        daño_pc = int(2*fuerzac) - rango_dañopj
+
+        daño_critico_pc = fuerzac * 2
+        daño_critico_pj = fuerzaj * 2
+
+        print("\n" + nombre_pc + " eligió: " + computer)
+
         if jugador == computer: 
             print("\n--¡Empate!--") 
-        elif (jugador == "piedra"):                  
-            if (computer == "papel"):                
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
-                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj)                    
+
+        elif (jugador == "piedra"):
+            critico = random.randint(1,12)   
+            if (computer == "papel") and critico != 12:                
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(daño_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_pc     
+            elif (computer == "papel") and critico == 12:
+                print("\n**¡" + nombre_pc.upper() + " HACE UN GOLPE CRÍTICO!**\nSu golpe hace " + str(daño_critico_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_critico_pc
+            elif (computer == "tijera") and critico == 1:
+                print("\n**¡GOLPE CRÍTICO!**\n\n¡Le quitas " + str(daño_critico_pj)  + " puntos de vida!")
+                hp_pc = hp_pc - daño_critico_pj              
             else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc) + " puntos de vida!")
-                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(daño_pj) + " puntos de vida!")
+                hp_pc = hp_pc - daño_pj
+
         elif (jugador == "papel"):
-            if (computer == "piedra"):
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc)  + " puntos de vida!")
-                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
-            else:
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
-                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj) 
+            critico = random.randint(1,12)                        
+            if (computer == "piedra") and critico != 1:
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(daño_pj)  + " puntos de vida!")
+                hp_pc = hp_pc - daño_pj
+            elif (computer == "piedra") and critico == 1:
+                print("\n**¡GOLPE CRÍTICO!**\n\n¡Le quitas " + str(daño_pj * 2)  + " puntos de vida!")
+                hp_pc = hp_pc - daño_critico_pj   
+            elif (computer == "tijera") and critico == 12:
+                print("\n**¡" + nombre_pc.upper() + " HACE UN GOLPE CRÍTICO!**\n\nSu golpe hace " + str(daño_critico_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_critico_pc     
+            elif (computer == "tijera") and critico != 12:
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(daño_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_pc 
+
         elif (jugador == "tijera"):
-            if (computer == "piedra"):
-                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(int(2*fuerzac) - rango_dañopj)  + " puntos de vida!") 
-                hp_pj = hp_pj - (int(2*fuerzac) - rango_dañopj) 
-            else:
-                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(int(2*fuerzaj) - rango_dañopc)  + " puntos de vida!")
-                hp_pc = hp_pc - (int(2*fuerzaj) - rango_dañopc)
-    
+            critico = random.randint(1,12)  
+            if (computer == "piedra") and critico != 12:
+                print("\n<<¡Punto para " + nombre_pc + "!>>\n\n¡Te quita " + str(daño_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_pc 
+            elif (computer == "piedra") and critico == 12:
+                print("\n**¡" + nombre_pc.upper() + " HACE UN GOLPE CRÍTICO!**\n\nSu golpe hace " + str(daño_critico_pc)  + " puntos de vida!") 
+                hp_pj = hp_pj - daño_critico_pc
+            elif (computer == "papel") and critico != 1:               
+                print("\n||¡Punto para vos!||\n\n¡Le quitas " + str(daño_pj)  + " puntos de vida!")
+                hp_pc = hp_pc - daño_pj
+            elif (computer == "papel") and critico == 1:
+                print("\n**¡GOLPE CRÍTICO!**\n\n¡Le quitas " + str(daño_critico_pj)  + " puntos de vida!")
+                hp_pc = hp_pc - daño_critico_pj                   
+
     if hp_pj < hp_pc:                                      #Si el HP del jugador es mayor al HP de la pc, ganaste (si llega acá es porque uno de los dos es 0)
         print("\n<<<Perdiste, capo, mal ahí.>>>") 
         print("----------------------------------\n")
