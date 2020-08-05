@@ -40,6 +40,9 @@
 #Versión 0.7
 #Agregado el stat suerte (que no hace nada todavía)
 
+#Versión 0.7b
+#Suerte afecta las chances de que un golpe crítico haga más daño que un golpe crítico normal
+
 import random
 import time
 
@@ -80,7 +83,8 @@ def creacion_pj():
     print("\nBienvenido a la creación de personaje")
     nombre = input("¿Cuál nombre querés darle a tu personaje?: ")
     print("\nTendrá " + str(puntos) + " puntos que podrá asignar a cada habilidad")
-    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear\nDefensa: Cuánto daño podes resistir\n")
+    print("\nLas habilidades son:\nHP: Cuántos puntos de vida tenés (el valor que le asigne se multiplicará por 10)\nFuerza: Cuánto daño hacés al golpear")
+    print("Defensa: Cuánto daño podes resistir\nSuerte: Las chances de que un golpe crítico haga más daño\n")
     time.sleep(1)    
 
     try:
@@ -223,7 +227,8 @@ def load_file():
     PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado, suerte_cargado)
 
     print("\nCargado con éxito:")
-    print("\nTu personaje " + PJ.nombre + " tiene: \n" + str(PJ.HP) + " Puntos de HP\n" + str(PJ.fuerza) + " Puntos de Fuerza\n" + str(PJ.defensa) + " Puntos de Defensa")
+    print("\nTu personaje " + PJ.nombre + " tiene: \n" + str(PJ.HP) + " Puntos de HP\n" + str(PJ.fuerza) + " Puntos de Fuerza")
+    print(str(PJ.defensa) + " Puntos de Defensa\n" + str(PJ.suerte) + " Puntos de Suerte")
     print("----------------------------------")
     time.sleep(0.5)
     load.close()
@@ -307,8 +312,17 @@ def pelea():
         daño_pj = int(2*fuerzaj) - rango_dañopc
         daño_pc = int(2*fuerzac) - rango_dañopj
 
-        daño_critico_pc = fuerzac * 2
-        daño_critico_pj = fuerzaj * 2
+        mult_suertej = int((suertej / 10) + 2)
+        if suertej <= 1:       
+            daño_critico_pj = fuerzaj * 2
+        else:
+            daño_critico_pj = fuerzaj * random.randint(2, mult_suertej)
+        
+        mult_suertec = int((suertec / 10) + 2)
+        if suertec <= 1:
+            daño_critico_pc = fuerzac * 2
+        else:
+            daño_critico_pc = fuerzac * random.randint(2, mult_suertec)
 
         print("\n" + nombre_pc + " eligió: " + computer)
 
@@ -381,4 +395,3 @@ def pelea():
         eleccion()
 
 main_menu()
-
