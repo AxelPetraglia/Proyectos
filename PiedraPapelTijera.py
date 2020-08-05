@@ -37,25 +37,29 @@
 #Este golpe ignora la defensa del rival y multiplica por 2 la fuerza de quien da el golpe crítico
 #Ahora para elegir piedra, papel o tijera solamente tenes que poner 1, 2 o 3 (respectivamente)
 
+#Versión 0.7
+#Agregado el stat suerte (que no hace nada todavía)
+
 import random
 import time
 
 class jugador: 
-    def __init__(self, nombre, HP, fuerza, defensa):
+    def __init__(self, nombre, HP, fuerza, defensa, suerte):
         self.HP = HP
         self.nombre = nombre
         self.fuerza = fuerza
         self.defensa = defensa
+        self.suerte = suerte
 
 #Rivales
 global PC  
 global PC2
 global PC3
 global PC4 
-PC = jugador("Daniel Placeholder", 60, 8, 5)
-PC2 = jugador("Juan Normal", 100, 10, 8)
-PC3 = jugador("Carlos Testeo", 150, 12, 10)
-PC4 = jugador("Ibrahim al-Azar", random.randint(100, 200), random.randint(10,15), random.randint(5, 12))
+PC = jugador("Daniel Placeholder", 60, 8, 5, 3)
+PC2 = jugador("Juan Normal", 100, 10, 8, 6)
+PC3 = jugador("Carlos Testeo", 150, 12, 10, 8)
+PC4 = jugador("Ibrahim al-Azar", random.randint(100, 200), random.randint(10,15), random.randint(5, 12), random.randint(5, 12))
 
 def main_menu():
     print("Bienvenido a\n")
@@ -72,7 +76,7 @@ def main_menu():
         opcion_menu = input("Error de selección.\nPresione 1 para crear una nueva partida\nPresione 2 para cargar una partida previa\n\n")
 
 def creacion_pj():
-    puntos = 20
+    puntos = 25
     print("\nBienvenido a la creación de personaje")
     nombre = input("¿Cuál nombre querés darle a tu personaje?: ")
     print("\nTendrá " + str(puntos) + " puntos que podrá asignar a cada habilidad")
@@ -123,11 +127,25 @@ def creacion_pj():
         defensa_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
     print("Tendrá " + str(defensa_pj) + (" puntos de defensa"))
     time.sleep(0.6)
-    
-    global PJ
-    PJ = jugador(nombre, HP_pj, fuerza_pj, defensa_pj) 
 
-    if int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) == puntos:
+    print("\nLe quedan " + str(int(puntos - (int((HP_pj - 1) / 10) + (fuerza_pj - 1) + (defensa_pj - 1)))) + " puntos para asignar\n")
+    try:
+        suerte_pj = int(input("¿Cuántos puntos quiere asignarle a su Suerte?: ")) + 1
+    except:
+        try:
+            suerte_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
+        except: 
+            print("¡Solamente podés usar números! Va a volver al creador de personaje")
+            time.sleep(0.6)
+            creacion_pj()
+    while suerte_pj < 0:
+        suerte_pj = int(input("Valor inválido, intente de nuevo: ") + 1)
+    print("Tendrá " + str(suerte_pj) + (" puntos de suerte"))
+    time.sleep(0.6)    
+    global PJ
+    PJ = jugador(nombre, HP_pj, fuerza_pj, defensa_pj, suerte_pj) 
+
+    if int(((HP_pj - 1) / 10) + (fuerza_pj - 1) + (defensa_pj - 1) + (suerte_pj - 1)) == puntos:
         time.sleep(0.5)
         print("\n¡Su personaje " + nombre + " ha sido creado con éxito!")
         print("\nTu personaje va a tener: \n" + str(HP_pj) + " Puntos de HP\n" + str(fuerza_pj) + " Puntos de Fuerza\n" + str(defensa_pj) + " Puntos de Defensa")
@@ -141,8 +159,9 @@ def creacion_pj():
             save_eleccion = input("Error de selección.\nPresione Y para guardar\nPresione N para ir directo a elegir su rival\n\n")    
         time.sleep(0.5)
 
-    elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < puntos:
+    elif int(((HP_pj - 1) / 10) + (fuerza_pj - 1) + (defensa_pj - 1) + (suerte_pj - 1)) < puntos:
         time.sleep(0.5)
+        print(int(((HP_pj - 1) / 10) + (fuerza_pj - 1) + (defensa_pj - 1) + (suerte_pj - 1)))
         print("\nHa utilizado menos de los puntos asignados, ¿Está seguro que quiere continuar?")
         continuar = input("Presione Y para continuar o Presione N para volver a crear su personaje: ")
         continuar = continuar.lower()
@@ -163,7 +182,7 @@ def creacion_pj():
         elif continuar == "n":
             creacion_pj()
 
-    elif int(int((HP_pj - 1 ) / 10) + int(fuerza_pj - 1) + int(defensa_pj - 1)) < 0:
+    elif int(((HP_pj - 1) / 10) + (fuerza_pj - 1) + (defensa_pj - 1) + (suerte_pj - 1)) < 0:
         print("\nHa utilizado más puntos que los que tiene asignados. Intente de nuevo")
         time.sleep(1)
         creacion_pj()
@@ -176,7 +195,7 @@ def creacion_pj():
 
 def save_file():
     save = open("SaveSFF.txt", "w+")
-    save.writelines(str(PJ.nombre) + "\n" + str(PJ.HP) + "\n" + str(PJ.fuerza) + "\n" + str(PJ.defensa))
+    save.writelines(str(PJ.nombre) + "\n" + str(PJ.HP) + "\n" + str(PJ.fuerza) + "\n" + str(PJ.defensa) + "\n" + str(PJ.suerte))
     time.sleep(0.5)
     save.close()
     print("Su partida ha sido guardada con éxito")
@@ -197,8 +216,11 @@ def load_file():
     load_defensa = load.readline()
     defensa_cargado = load_defensa.strip()
 
+    load_suerte = load.readline()
+    suerte_cargado = load_suerte.strip()
+
     global PJ
-    PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado)
+    PJ = jugador(nombre_cargado, HP_cargado, fuerza_cargado, defensa_cargado, suerte_cargado)
 
     print("\nCargado con éxito:")
     print("\nTu personaje " + PJ.nombre + " tiene: \n" + str(PJ.HP) + " Puntos de HP\n" + str(PJ.fuerza) + " Puntos de Fuerza\n" + str(PJ.defensa) + " Puntos de Defensa")
@@ -215,29 +237,34 @@ def eleccion():
     
 def pelea(): 
     if rival_elegido == "1":
-        hp_pc = int(PC.HP)
-        fuerzac = int(PC.fuerza)
-        defensac = int(PC.defensa)
+        hp_pc = PC.HP
+        fuerzac = PC.fuerza
+        defensac = PC.defensa
+        suertec = PC.suerte
         nombre_pc = PC.nombre
     elif rival_elegido == "2":
-        hp_pc = int(PC2.HP)
-        fuerzac = int(PC2.fuerza)
-        defensac = int(PC2.defensa)
+        hp_pc = PC2.HP
+        fuerzac = PC2.fuerza
+        defensac = PC2.defensa
+        suertec = PC2.suerte
         nombre_pc = PC2.nombre
     elif rival_elegido == "3":
-        hp_pc = int(PC3.HP)
-        fuerzac = int(PC3.fuerza)
-        defensac = int(PC3.defensa)
+        hp_pc = PC3.HP
+        fuerzac = PC3.fuerza
+        defensac = PC3.defensa
+        suertec = PC3.suerte
         nombre_pc = PC3.nombre
     elif rival_elegido == "4":
-        hp_pc = int(PC4.HP)
-        fuerzac = int(PC4.fuerza)
-        defensac = int(PC4.defensa)
+        hp_pc = PC4.HP
+        fuerzac = PC4.fuerza
+        defensac = PC4.defensa
+        suertec = PC4.suerte
         nombre_pc = PC4.nombre
 
     hp_pj = int(PJ.HP) 
     fuerzaj = int(PJ.fuerza)
     defensaj = int(PJ.defensa)
+    suertej = int(PJ.suerte)
 
     while hp_pc > 0 and hp_pj > 0: 
         if hp_pc == 0 or hp_pj == 0: 
@@ -354,3 +381,4 @@ def pelea():
         eleccion()
 
 main_menu()
+
